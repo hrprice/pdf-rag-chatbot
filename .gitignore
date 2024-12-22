@@ -1,0 +1,6 @@
+.env
+__pycache__
+chroma_data
+credentials
+*.env.json
+*.pdf
