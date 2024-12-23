@@ -1,28 +1,42 @@
 import os
 
 from dotenv import load_dotenv
-from langchain_chroma import Chroma
 from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
+from langchain_mongodb import MongoDBAtlasVectorSearch
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+from pymongo import MongoClient
 
 load_dotenv()
 
 
 def get_client():
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+
+    mongo_client = MongoClient(os.getenv("MONGODB_ATLAS_CLUSTER_URI"))
+
+    DB_NAME = os.getenv("DB_NAME")
+    COLLECTION_NAME = os.getenv("COLLECTION_NAME")
+    ATLAS_VECTOR_SEARCH_INDEX_NAME = os.getenv("ATLAS_VECTOR_SEARCH_INDEX_NAME")
+
+    MONGODB_COLLECTION = mongo_client[DB_NAME][COLLECTION_NAME]
+
+    vector_store = MongoDBAtlasVectorSearch(
+        collection=MONGODB_COLLECTION,
+        embedding=embeddings,
+        index_name=ATLAS_VECTOR_SEARCH_INDEX_NAME,
+        relevance_score_fn="cosine",
+    )
+
+    llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL"))
+
     class State(MessagesState):
         answer: str
 
     graph_builder = StateGraph(State)
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-    vector_store = Chroma(
-        embedding_function=embeddings, persist_directory="./chroma_data"
-    )
-
-    llm = ChatOpenAI(model=os.getenv("OPENAI_MODEL"))
 
     @tool(response_format="content_and_artifact")
     def retrieve(query: str):
