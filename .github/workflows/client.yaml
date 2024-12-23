@@ -36,9 +36,12 @@ jobs:
         with:
           node-version: 20
           cache: "yarn"
+          cache-dependency-path: client/yarn.lock
       - name: Install dependencies
+        working-directory: client
         run: yarn install --frozen-lockfile
       - name: Build
+        working-directory: client
         run: yarn build
         env:
           VITE_WEBSOCKET_URI: ${{ secrets.VITE_WEBSOCKET_URI }}
@@ -50,7 +53,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload dist folder
-          path: "./dist"
+          path: ".client/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
