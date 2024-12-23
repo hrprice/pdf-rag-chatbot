@@ -11,7 +11,7 @@ const AuthenticatedRoute = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!user) {
-      navigate("/login");
+      navigate("/pdf-rag-chatbot/login");
     }
   }, [navigate, user]);
 
@@ -22,14 +22,14 @@ const Routing = () => {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/pdf-rag-chatbot"
         element={
           <AuthenticatedRoute>
             <ChatPage />
           </AuthenticatedRoute>
         }
       />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/pdf-rag-chatbot/login" element={<LoginPage />} />
       <Route
         path="*"
         element={<Typography variant="h4">Page Not Found</Typography>}
