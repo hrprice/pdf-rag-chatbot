@@ -25,7 +25,7 @@ const LoginPage = () => {
     }
 
     login(email, password)
-      .then(() => navigate("/pdf-rag-chatbot"))
+      .then(() => navigate("/"))
       .catch(() => showErrorSnackbar());
   };
 
