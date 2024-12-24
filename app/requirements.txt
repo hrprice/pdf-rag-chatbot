@@ -14,3 +14,4 @@ asyncio
 langchain-mongodb
 pymongo
 websockets
+cryptography==3.1
