@@ -43,6 +43,7 @@ const MessageBox = ({
             display: "flex",
             justifyContent: "center",
             maxWidth: "90%",
+            whiteSpace: "pre-wrap",
           },
           ...(variant === "agent"
             ? {
