@@ -51,7 +51,7 @@ const MessageBox = ({
             : {
                 backgroundColor: "dodgerblue",
                 color: "white",
-                justifySelf: "end",
+                marginLeft: "auto",
               }),
         }}
       >
@@ -81,7 +81,7 @@ const ChatPage = () => {
     if (token) {
       // Initialize WebSocket
       const websocket = new WebSocket(
-        `${import.meta.env.VITE_WEBSOCKET_URI}?token=${token}`,
+        `${import.meta.env.VITE_WEBSOCKET_URI}?token=${token}`
       );
 
       websocketRef.current = websocket;

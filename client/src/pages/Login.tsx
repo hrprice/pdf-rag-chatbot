@@ -30,14 +30,18 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
         minHeight="100vh"
-        justifySelf="center"
         width={300}
       >
         <Typography variant="h4" mb={2}>
@@ -73,7 +77,7 @@ const LoginPage = () => {
           Login
         </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 
