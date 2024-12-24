@@ -6,6 +6,7 @@
   "homepage": "https://hrprice.github.io/pdf-rag-chatbot/",
   "scripts": {
     "dev": "vite",
+    "dev:ui": "VITE_WEBSOCKET_URI=wss://pdf-rag-chatbot.onrender.com/chat vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
