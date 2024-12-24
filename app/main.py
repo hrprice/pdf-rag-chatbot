@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from google.auth.transport import requests
 from google.oauth2 import id_token
+from langchain_core.messages import HumanMessage, SystemMessage
 from rag import get_client
 
 load_dotenv()
@@ -14,6 +15,10 @@ load_dotenv()
 firebase_request_adapter = requests.Request()
 app = FastAPI()
 client = get_client()
+
+initial_system_message = ""
+with open(os.getenv("SYSTEM_PROMPT"), "r") as f:
+    initial_system_message = f.read()
 
 
 async def verify_firebase_token(token: str):
@@ -52,10 +57,19 @@ async def websocket_endpoint(websocket: WebSocket, token):
         hash_object = hashlib.sha256(random_bytes)
         random_hash = hash_object.hexdigest()
         prev = ""
+        first_message = True
+
         while True:
             message = await asyncio.wait_for(websocket.receive_text(), timeout=600)
             async for event in client.astream_events(
-                {"messages": [{"role": "user", "content": message}]},
+                {
+                    "messages": [
+                        SystemMessage(initial_system_message),
+                        HumanMessage(content=message),
+                    ]
+                    if first_message
+                    else [HumanMessage(content=message)]
+                },
                 stream_mode="values",
                 version="v1",
                 config={"configurable": {"thread_id": random_hash}},
@@ -75,7 +89,7 @@ async def websocket_endpoint(websocket: WebSocket, token):
                         {"message_type": "chat_response", "content": line}
                     )
                     prev = line
-
+            first_message = False
     except HTTPException as error:
         await websocket.send_json({"message_type": "error", "content": error.detail})
         await websocket.close()

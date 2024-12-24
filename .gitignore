@@ -3,3 +3,4 @@ __pycache__
 credentials
 *.env.json
 *.pdf
+app/prompts
