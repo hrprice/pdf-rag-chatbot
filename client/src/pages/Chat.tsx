@@ -138,14 +138,23 @@ const ChatPage = () => {
   };
 
   return (
-    <div style={{ paddingBlock: "20px", maxWidth: "600px", margin: "auto" }}>
+    <div
+      style={{
+        paddingBlock: "20px",
+        maxWidth: "600px",
+        margin: "auto",
+        height: "80vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <div
         style={{
           border: "1px solid #ccc",
           borderRadius: "8px",
           padding: "10px",
           marginBottom: "20px",
-          height: "400px",
+          height: "100%",
           overflowY: "scroll",
         }}
       >
